@@ -1,0 +1,30 @@
+html, body {
+    /*height: 100v;
+  margin: 0;
+  padding: 0;*/
+}
+
+#map {
+    height: 80vh;
+    width: 50vw;
+}
+
+#pano {
+    height: 80vh;
+    width: 100vw;
+}
+
+h1 {
+    text-align: center;
+}
+
+.mapView {
+    width: 90vw;
+    height: 100vh;
+    margin: 0 auto;
+    display: flex;
+}
+
+#submitingGuess {
+    /*float: left;*/
+}
