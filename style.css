@@ -2,8 +2,12 @@ html, body {
     /*height: 100v;
   margin: 0;
   padding: 0;*/
+
 }
 
+body {
+    background-image: url("http://www.eldersweather.com.au/images/maps/wzworld/world.png");
+}
 #map {
     height: 80vh;
     width: 50vw;
@@ -20,11 +24,17 @@ h1 {
 
 .mapView {
     width: 90vw;
-    height: 100vh;
+    height: 80vh;
     margin: 0 auto;
     display: flex;
+
 }
 
 #submitingGuess {
-    /*float: left;*/
+    /*flow-into: mapView;*/
+}
+
+#scoreBox {
+    /*height: 10vh;
+    color: red;*/
 }
