@@ -1,20 +1,19 @@
 $(document).ready(function() {
 
+// ***Defining all variables for the Global Scope***
+////////////////////////////////////////////////////////////////////////////////
     var currentScore = [];
     var subButton = document.getElementById('submitingGuess')
     var nextButton = document.getElementById('nextGuess')
     var newGameButton = document.getElementById('newGame')
-    var iconBase = 'https://maps.google.com/mapfiles/kml/shapes/';
-    var icons = {
-      info: {
-        icon: iconBase + 'info-i_maps.png'
-      }
-    }
+    var guessDistFromCurButton = document.getElementById('disFromLoc')
+    var textGuess = document.getElementById('howFar')
     var guessedLocation = null;
     var map
+    var pos
 
-
-
+// ***Start Button that sets the map***
+////////////////////////////////////////////////////////////////////////////////
     newGameButton.addEventListener('click', function(event) {
         map = new google.maps.Map(document.getElementById('map'), {
             center: mapViewOfAustin,
@@ -22,16 +21,23 @@ $(document).ready(function() {
         });
         createNewPano()
         clickingStuff()
+        navigator.geolocation.getCurrentPosition(function(position) {
+            pos = {
+                lat: position.coords.latitude,
+                lng: position.coords.longitude
+            };
+            return pos
+        })
+        distanceFromYouLc()
     })
+
+// ***Randomized Locations and set map veiw***
+////////////////////////////////////////////////////////////////////////////////
+
 
     function getRndmLaLn(min, max) {
         return Math.random() * (max - min) + min;
     }
-
-    // var randomizedStreetveiw = {
-    //     lat: getRndmLaLn(30.000000, 30.527629),
-    //     lng: getRndmLaLn(-98.074265, -97.417831)
-    // };
 
     var mapViewOfAustin = {
         lat: 30.271781,
@@ -51,6 +57,8 @@ $(document).ready(function() {
     }
 
 
+// ***create place Marker***
+////////////////////////////////////////////////////////////////////////////////
     function placeMarker(location) {
         var marker = new google.maps.Marker({
             position: location,
@@ -58,8 +66,46 @@ $(document).ready(function() {
         });
     }
 
+// ***function that gets the distance in km from Lat Lon cords***
+////////////////////////////////////////////////////////////////////////////////
+    function calculatingDistance(userInput, theTargetInput, colorOfLine) {
+        var lineOfDifferece = new google.maps.Polyline({
+            path: [userInput, theTargetInput],
+            geodesic: true,
+            strokeColor: colorOfLine,
+            strokeOpacity: .7,
+            strokeWeight: 2
+        });
 
-    function createNewPano(toRunLater) {
+        // calculating distance of line
+        lineOfDifferece.setMap(map);
+        google.maps.LatLng.prototype.kmTo = function(a) {
+            var e = Math,
+                ra = e.PI / 180;
+            var b = this.lat() * ra,
+                c = a.lat() * ra,
+                d = b - c;
+            var g = this.lng() * ra - a.lng() * ra;
+            var f = 2 * e.asin(e.sqrt(e.pow(e.sin(d / 2), 2) + e.cos(b) * e.cos(c) * e.pow(e.sin(g / 2), 2)));
+            return f * 6378.137;
+        }
+
+        google.maps.Polyline.prototype.inKm = function(n) {
+            var a = this.getPath(n),
+                len = a.getLength(),
+                dist = 0;
+            for (var i = 0; i < len - 1; i++) {
+                dist += a.getAt(i).kmTo(a.getAt(i + 1));
+            }
+            return dist;
+        }
+
+        return lineOfDifferece.inKm()*.621371192;
+    }
+
+// ***makes new street pano cycles through untill find random point with pano***
+////////////////////////////////////////////////////////////////////////////////
+    function createNewPano(toRunLater, runYouLocAfter) {
         var projectionResolved = new Promise(function(res, rej) {
             var panorama = {}
             reRun(panorama, function(result) {
@@ -96,94 +142,79 @@ $(document).ready(function() {
 
         projectionResolved.then(function(info) {
             toRunLater()
+            runYouLocAfter()
             console.log('INFO', info.projection);
         })
     }
 
+// ***assigns the clicked point on the map a lat lon***
+////////////////////////////////////////////////////////////////////////////////
     // clicking on the map on the left will place a marker and show where the street view is located
+    function clickingStuff() {
+        google.maps.event.addListener(map, 'click', function firstGuess(ev) {
+            guessedLocation = ev.latLng
+            placeMarker(ev.latLng);
 
-    function clickingStuff (){
-        // if (!haveIGuessed) {
-            google.maps.event.addListener(map, 'click', function firstGuess(ev) {
-                guessedLocation = ev.latLng
-                placeMarker(ev.latLng);
+            return guessedLocation
+        });
 
-                return guessedLocation
-            });
-
-            subButton.removeEventListener('click', doStuff)
-            subButton.addEventListener('click', doStuff)
-
-
+        subButton.removeEventListener('click', doStuff)
+        subButton.addEventListener('click', doStuff)
 
     }
+
+// ***submits guess and evaluates distance from guess to location of the pano***
+////////////////////////////////////////////////////////////////////////////////
 
     function doStuff(event) {
         placeMarker(randomizedStreetveiw);
 
-
         // making the line on the map
-        var lineOfDifferece = new google.maps.Polyline({
-            path: [guessedLocation, randomizedStreetveiw],
-            geodesic: true,
-            strokeColor: '#FF0000',
-            strokeOpacity: .7,
-            strokeWeight: 2
-        });
+        var disstanceOfLine = calculatingDistance(guessedLocation, randomizedStreetveiw, '#FF0000')
 
-        // calculating distance of line
-        lineOfDifferece.setMap(map);
-        google.maps.LatLng.prototype.kmTo = function(a) {
-            var e = Math,
-            ra = e.PI / 180;
-            var b = this.lat() * ra,
-            c = a.lat() * ra,
-            d = b - c;
-            var g = this.lng() * ra - a.lng() * ra;
-            var f = 2 * e.asin(e.sqrt(e.pow(e.sin(d / 2), 2) + e.cos(b) * e.cos(c) * e.pow(e.sin(g / 2), 2)));
-            return f * 6378.137;
-        }
-
-        google.maps.Polyline.prototype.inKm = function(n) {
-            var a = this.getPath(n),
-            len = a.getLength(),
-            dist = 0;
-            for (var i = 0; i < len - 1; i++) {
-                dist += a.getAt(i).kmTo(a.getAt(i + 1));
-            }
-            return dist;
-        }
-
-        var disstanceOfLine = lineOfDifferece.inKm();
         currentScore.push(disstanceOfLine)
 
         // document.getElementById('scoreBox').innerHTML = Math.floor(disstanceOfLine) + ' Kilometers Away From Location!'
-        window.alert(Math.round(disstanceOfLine) + ' Kilometers Away From Location!');
+        window.alert(Math.round(disstanceOfLine*10)/10 + ' Miles Away From Location!');
         var totalScore = null
         for (var i = 0; i < currentScore.length; i++) {
-            totalScore += currentScore[i]
+            if (totalScore <= 100) {
+                totalScore += currentScore[i]
+            }
+            else {
+                window.alert('You have a combined error of ' + Math.round(totalScore*10)/10 + ' in ' + currentScore.length + ' guesses')
+            }
         }
-        console.log(totalScore);
-        console.log(currentScore);
-        // $('#scoreBox')append.val(totalScore)
+
+        guessDistFromCurButton.removeEventListener('click', distanceFromYouLc)
+        // guessDistFromCurButton.addEventListener('click', distanceFromYouLc)
+
+        $('#score').val(Math.round(totalScore*10)/10)
+        return randomizedStreetveiw
+
     }
 
+// ***find the disstance betweeen pano location and the location your searching from***
+////////////////////////////////////////////////////////////////////////////////
+
+    function distanceFromYouLc() {
+        guessDistFromCurButton.addEventListener('click', function() {
+            var distanceFromyouInMi = calculatingDistance(pos, randomizedStreetveiw, 'transparent')
+            $('#howFar').val('This Panorama is ' + Math.round(distanceFromyouInMi*10)/10 + ' miles away from your location');
+            // placeMarker(pos)
+        })
+    }
+
+// ***resests the map***
+////////////////////////////////////////////////////////////////////////////////
     nextButton.addEventListener('click', function(event) {
         map = new google.maps.Map(document.getElementById('map'), {
             center: mapViewOfAustin,
             zoom: 9
         });
-        createNewPano(clickingStuff)
-        // subButton.removeEventListener('click', doStuff)
+        createNewPano(clickingStuff, distanceFromYouLc)
+        $('#howFar').val('')
 
     });
 
-
-
 })
-
-//is the problem partily  becouse of the two randomize fucntions not reassigning each time
-
-
-// api_key=mapzen-odes-cMfGEs
-// https://roads.googleapis.com/v1/snapToRoads?parameters&key=AIzaSyCDpbG5bX-9FXlzU3GLJqVFrcx5Le9cy40
