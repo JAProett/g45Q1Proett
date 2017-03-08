@@ -1,7 +1,4 @@
 html, body {
-    /*height: 100v;
-  margin: 0;
-  padding: 0;*/
 
 }
 
@@ -44,6 +41,6 @@ h1 {
 
 
 
-#submitingGuess {
-    /*flow-into: mapView;*/
+.buttonsAndStuff {
+
 }
