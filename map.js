@@ -15,6 +15,7 @@ $(document).ready(function() {
     var map
     var pos
 
+
     // ***Start Button that sets the map***
     ////////////////////////////////////////////////////////////////////////////////
     newGameButton.addEventListener('click', function newgame(event) {
@@ -26,7 +27,7 @@ $(document).ready(function() {
         $('#howFar').val('')
         $('#score').val('')
         $('#guessesBox').val('')
-        window.alert('See how few miles you accumulate in 5 guess')
+        window.alert('See how few miles you accumulate in 5 guesses!')
     })
 
     // ***generate new map***
