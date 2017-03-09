@@ -1,46 +1,73 @@
-html, body {
-
-}
-
 body {
     background-image: url("http://www.eldersweather.com.au/images/maps/wzworld/world.png");
+
 }
+
 #map {
-    height: 80vh;
-    width: 50vw;
+    height: 70vh;
+    width: 40vw;
 }
 
 #pano {
-    height: 80vh;
-    width: 100vw;
+    height: 70vh;
+    width: 80vw;
 }
 
 h1 {
     text-align: center;
-    height: 8vh
+    height: 8vh;
+    font-family: Copperplate, "Copperplate Gothic Light", fantasy;
+    font-style: normal;
+    font-variant: small-caps;
+    font-weight: bold;
+    color: #565656
+}
+
+.containerWithEverything {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
 }
 
 .mapView {
     width: 90vw;
-    height: 80vh;
+    height: 70vh;
     margin: 0 auto;
     display: flex;
-
+    align-items: flex-start
 }
 
 #howFar {
     text-align: center;
-    float: left;
+    width: 20vw;
+    background-color: #eaeaea;
+    border-radius: 5px;
+
 }
 
 #score {
     text-align: center;
     color: red;
-    float: right;
+    width: 15vw;
+    background-color: #eaeaea;
+    border-radius: 5px;
 }
 
-
-
 .buttonsAndStuff {
+    display: flex;
+    /*align-items: flex-end;*/
+    margin: 0 auto;
+}
 
+.remainGeus {
+    margin: 0 auto;
+    text-align: center;
+    color: #4f93f2;
+    border-radius: 5px;
+    width: 15vw;
+    height: 3vh
+}
+
+.remainGeus input {
+    text-align: center;
 }

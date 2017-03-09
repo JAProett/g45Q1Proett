@@ -14,25 +14,31 @@
     <!-- Compiled and minified JavaScript -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.0/js/materialize.min.js"></script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBxfuvQ3IxNHmt-sVma5_mTooesjz6O-pI&"></script>
+    <link rel="shortcut icon" href="http://sstatic.net/stackoverflow/img/favicon.ico">
 </head>
-
 <body>
     <h1>Where in Austin are you?</h1>
-
-    <div class="mapView">
-        <div id="map"></div>
-        <div id="pano"></div>
-    </div>
-
-    <div class='buttonsAndStuff'>
-        <input class="btn" type="button" name="name" value="New Game" id="newGame">
-        <input class="btn" type="button" name="name" value="Guess" id="submitingGuess">
-        <input class="btn" type="button" name="name" value="NextChallenge" id="nextGuess">
-        <input type='text' id='score' placeholder='scoreBox'>
-        <input class="btn" type="button" name="name" value="Hint: Disstance from you" id="disFromLoc">
-        <input type='text' id='howFar' placeholder='Disstance From Current Location'>
+    <div class="containerWithEverything">
+        <div class='mapView'>
+            <div id="map"></div>
+            <div id="pano"></div>
+        </div>
+        <div class='buttonsAndStuff'>
+            <div>
+                <input class="btn" type="button" name="name" value="New Game" id="newGame">
+                <input class="btn" type="button" name="name" value="Guess" id="submitingGuess">
+                <input class="btn" type="button" name="name" value="NextChallenge" id="nextGuess">
+                <input type='text' id='score' placeholder='scoreBox'>
+            </div>
+            <div class='disFrmYou'>
+                <input class="btn" type="button" name="name" value="Hint: Disstance from you" id="disFromLoc">
+                <input type='text' id='howFar' placeholder='Disstance From Current Location'>
+            </div>
+        </div>
+        <div class= 'remainGeus'>
+            <input type='text' id='guessesBox' placeholder='5 guesses left'>
+        </div>
     </div>
 
 </body>
-
 </html>
