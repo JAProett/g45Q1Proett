@@ -18,6 +18,8 @@ $(document).ready(function() {
 
     // ***Start Button that sets the map***
     ////////////////////////////////////////////////////////////////////////////////
+
+// make this a function so you can resuse the reset bro #noteToFutureMe
     newGameButton.addEventListener('click', function newgame(event) {
         newMap();
         createNewPano();
@@ -67,6 +69,8 @@ $(document).ready(function() {
         return randomizedStreetveiw;
     }
 
+    // ***get location of this computor d
+    ////////////////////////////////////////////////////////////////////////////////
     navigator.geolocation.getCurrentPosition(function(position) {
         pos = {
             lat: position.coords.latitude,
@@ -85,7 +89,7 @@ $(document).ready(function() {
         });
     }
 
-    // ***function that gets the distance in km from Lat Lon cords***
+    // ***function that gets the distacne in km from Lat Lon cords***
     ////////////////////////////////////////////////////////////////////////////////
     function calculatingDistance(userInput, theTargetInput, colorOfLine) {
         var lineOfDifferece = new google.maps.Polyline({
