@@ -11,7 +11,7 @@ $(document).ready(function() {
     var guessedLocation = null;
     var imagePano = 'http://maps.google.com/mapfiles/kml/pal4/icon61.png';
     var imageGuess = 'http://maps.google.com/mapfiles/kml/pal4/icon53.png';
-    var imageYrLoc = 'http://maps.google.com/mapfiles/kml/pal2/icon10.png'
+    var imageYrLoc = 'http://maps.google.com/mapfiles/kml/pal2/icon10.png';
     var map
     var pos
 
@@ -31,19 +31,6 @@ $(document).ready(function() {
         $('#guessesBox').val('')
         window.alert('See how few miles you accumulate in 5 guesses!')
     })
-
-    // ***generate new map***
-    ////////////////////////////////////////////////////////////////////////////////
-    function newMap() {
-        map = new google.maps.Map(document.getElementById('map'), {
-            center: mapViewOfAustin,
-            zoom: 9,
-            mapTypeId: 'hybrid',
-            streetViewControl: false,
-            mapTypeControl: false
-        });
-        return map
-    }
 
     // ***Randomized Locations and set map veiw***
     ////////////////////////////////////////////////////////////////////////////////
@@ -69,7 +56,7 @@ $(document).ready(function() {
         return randomizedStreetveiw;
     }
 
-    // ***get location of this computor d
+    // ***get location of this computor d***
     ////////////////////////////////////////////////////////////////////////////////
     navigator.geolocation.getCurrentPosition(function(position) {
         pos = {
@@ -136,7 +123,9 @@ $(document).ready(function() {
             });
         })
 
-        function reRun(pano, cb, previousTimer) {
+        //
+        // a higher order recursive function that retries street views at a random location until a valid one is found
+        function reRun(pano, cb) {
             setTimeout(function() {
                 if (!!pano.projection) {
                     cb(panorama)
@@ -166,6 +155,20 @@ $(document).ready(function() {
             runYouLocAfter()
             console.log('INFO', info.projection);
         })
+    }
+
+
+    // ***generate new map***
+    ////////////////////////////////////////////////////////////////////////////////
+    function newMap() {
+        map = new google.maps.Map(document.getElementById('map'), {
+            center: mapViewOfAustin,
+            zoom: 10,
+            mapTypeId: 'hybrid',
+            streetViewControl: false,
+            mapTypeControl: false
+        });
+        return map
     }
 
     // ***assigns the clicked point on the map a lat lon***
